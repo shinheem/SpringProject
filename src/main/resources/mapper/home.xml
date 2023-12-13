@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.iclass.mvc.dao.HomeMapper">
+    <select id="getList" resultType="HomeDto">
+        select * from HOME order by idx desc
+    </select>
+    <insert id="insert" parameterType="HomeDto">
+        insert into home
+        values (home_idx_seq.nextval,#{hname},#{address},#{price},#{content},#{filenames},#{fcontent},#{hometype},
+                #{people},#{readcount},#{heart},#{startdate},#{enddate},#{lat},#{lng},#{detailaddress})
+    </insert>
+
+<select id="selectname" resultType="HomeDto">
+    select *
+    from HOME
+    where hname=#{hname}
+</select>
+
+<select id="selectByIdx" parameterType="long" resultType="HomeDto">
+    select *
+    from HOME
+    where IDX=#{idx}
+
+</select>
+
+<!-- 조회수 증가 -->
+<update id="setReadCount" parameterType="long">
+    update HOME
+    set
+        READCOUNT=READCOUNT+1
+    where
+        idx=#{idx}
+</update>
+
+    <delete id="delete" parameterType="long">
+        DELETE FROM
+            HOME
+        WHERE
+            idx=#{idx}
+    </delete>
+    <select id="selectOne" resultType="HomeDto" parameterType="long">
+        SELECT *
+        FROM HOME
+        where idx = #{idx}
+    </select>
+
+   <!-- 페이지 설정을 위한 페이지 -->
+    <select id="pagelist" resultType="HomeDto">
+        SELECT * FROM
+        (SELECT rownum r ,f.* FROM
+        (SELECT * FROM HOME
+        <include refid="search"></include>
+        ORDER BY idx DESC) f)
+        WHERE r BETWEEN #{start} AND #{end}
+    </select>
+    
+    <select id="count" resultType="int">
+        select count(*)
+        from HOME
+        <include refid="search"></include>
+    </select>
+
+    <sql id="search">
+        <where>
+            <if test="types !=null and types.length >0 and keyword != null and keyword.length !=0">
+                <foreach collection="types" item="type" open="(" close=")" separator=" OR ">
+                    <if test="type=='h'.toString()"> hname like '%' || #{keyword} || '%' </if>
+                    <if test="type=='d'.toString()"> address like '%' || #{keyword} || '%' </if>
+                </foreach>
+            </if>
+            <if test="startdate!=null and enddate !=null">
+                <trim prefix="and">
+                    startdate &lt;= #{startdate} and enddate &gt;= #{enddate}
+                </trim>
+            </if>
+            <if test="people!=null and people.length !=0">
+                <trim prefix="and">
+                    people &gt;= #{people}
+                </trim>
+            </if>
+        </where>
+    </sql>
+
+    <!-- 좋아요 등록 -->
+    <insert id="heartTrue">
+        INSERT INTO heart(email,idx,status)
+        VALUES (#{email},#{idx},1)
+    </insert>
+
+    <!-- 좋아요 취소 -->
+    <insert id="heartFalse" parameterType="HeartDto">
+        DELETE FROM heart
+        WHERE idx = #{idx} AND email=#{email}
+    </insert>
+
+    <!-- 좋아요 갯수 업데이트 -->
+    <update id="updateHeartCount" parameterType="long">
+        UPDATE HOME SET heart =
+                                (SELECT count(*) FROM heart WHERE idx = #{idx})
+        WHERE idx = #{idx}
+    </update>
+
+    <!-- 좋아요 갯수 -->
+    <select id="selectByHeartIdx" resultType="long">
+        select count(heart)
+        from HOME
+        where idx = #{idx}
+    </select>
+
+    <!-- 상세보기 본인 체크 여부 -->
+    <select id="checkHeart">
+        select * from heart
+        where email=#{email} and idx=#{idx}
+    </select>
+
+    <!-- 전체 숙소 체크 여부 -->
+    <select id="myhearts" >
+        select idx
+        from heart
+        where email =#{email}
+    </select>
+</mapper>

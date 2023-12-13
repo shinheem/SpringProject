@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title >내 정보 조회 및 수정</title>
+    <link rel="stylesheet" href="/css/updateinfo.css">
+</head>
+<body>
+<!-- 기본 레이아웃 -->
+<header th:replace="header.html"></header>
+<!-- 1. 레이아웃의 상단은 header.html 의 header 조각 가져오기-->
+<hr>
+<h2 class="pp">내 정보 조회 및 수정</h2>
+<hr>
+<div class="infoupdate">
+    <form th:action="@{/user/infoupdate}" method="post">
+        <p th:text="'회원번호: ' + ${userDto.id}"></p>
+
+        <p>
+            <label for="email">아이디:</label>
+            <input type="text" id="email" name="email" th:value="${userDto.email}">
+        </p>
+        <p>
+            <label for="name">이름:</label>
+            <input type="text" id="name" name="name" th:value="${userDto.name}">
+        </p>
+        <p>
+            <label for="password">패스워드:</label>
+            <input type="password" id="password" name="password" th:value="${userDto.password}" >
+        </p>
+        <p>
+            <label for="tel">전화번호:</label>
+            <input type="text" id="tel" name="tel" th:value="${userDto.tel}" >
+        </p>
+        <p>
+            <label for="address">주소:</label>
+            <input type="text" id="address" name="address" th:value="${userDto.address}" >
+        </p>
+        <p>
+            <label for="gender">성별:</label>
+            <input type="text" id="gender" name="gender" th:value="${userDto.gender}">
+        </p>
+
+        <!— 수정 완료 버튼 추가 —>
+        <button type="submit" th:href="@{/user/info}" class="up">수정 완료</button>
+    </form>
+</div>
+<hr>
+</body>
+<footer th:replace="footer.html"></footer>
+</html>

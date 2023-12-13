@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<head>
+    <meta charset="UTF-8">
+    <link href="https://fonts.googleapis.com/css?family=Montserrat:500,800" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/css/reserpage.css}" href="/css/reserpage.css">
+    <title>예약 내역</title>
+</head>
+<body>
+<main class="container" id="list">
+    <h1>예약 내역</h1>
+    <div style="height: 70px; width: 1180px;">
+            <a href="/" style="float: right;"><h2>HOME</h2></a>
+    </div>
+    <div style="margin:auto; width:900px;">
+        <ul id="main">
+            <div class="background-form" th:each="dto : ${list}">
+                <div class="list-box">
+                    <li>
+                        <div th:if="${dto.filenames != null}" style="width: 250px; height: 250px; float: left; margin-left: 40px">
+                            <div style="width: 250px; height: 250px;">
+                                <img th:src="@{'/upload/' + ${#strings.setSplit(dto.filenames, ',')[0]}}" width="100%" height="100%" style="object-fit: cover" />
+                            </div>
+                        </div>
+                        <div class="consumer" style="width: 350px; height: 250px; float: left; margin-left: 60px">
+                            <h4 th:text="${dto.hname}"></h4>
+
+                            <p th:text="'예약 번호 : ' + ${dto.rentno}"></p>
+
+                            <p th:text="'예약 날짜 : ' + '❤' + ${dto.checkin} + ' ~ ' + ${dto.checkout} + '❤'"></p>
+
+                            <p th:text="'예약 가격 : ' + ${dto.rentprice}"></p>
+
+                            <p th:text="'인원수 : ' + ${dto.np}"></p>
+                        </div>
+                        <div class="reservation-ticket-delete-button">
+                            <form th:action="@{/rent/delete}" method="post" onsubmit="return confirm('예약 내역을 삭제하시겠습니까?')">
+                                <input type="hidden" name="rentno" th:value="${dto.rentno}" />
+                                <span><button class="delete-btn5 btn-5" type="submit">삭제</button></span>
+                            </form>
+                            <div th:if="${message}" class="alert alert-success">
+                                <p th:text="${message}"></p>
+                            </div>
+                        </div>
+                    </li>
+                </div>
+            </div>
+        </ul>
+    </div>
+    <div style="width:700px; margin:auto; padding:10px; text-align:center;">
+        <div th:with="start=${paging.startPage}, last=${paging.endPage}" id="pagination">
+            <span th:if="${paging.startPage != 1}">
+                <a th:href="@{/rent/reserpage(page=1)}" th:data-num="1" class="btn btn-default">&lt;&lt;</a>
+                <a th:href="@{/rent/reserpage(page=${currentPage - 1})}" th:data-num="${paging.startPage - 1}" class="btn btn-default">&lt;</a>
+            </span>
+
+            <a th:each="i : ${#numbers.sequence(start, last)}"
+               th:href="@{/rent/reserpage(page=${i})}" th:text="${i}"
+               th:data-num="${i}"
+               th:class="${i == currentPage}? 'btn text-primary' : 'btn'"></a>
+
+            <span th:if="${paging.endPage != paging.totalPage}">
+                <a th:href="@{/rent/reserpage(page=${currentPage + 1})}" th:data-num="${paging.endPage + 1}" class="btn btn-default">&gt;</a>
+                <a th:href="@{/rent/reserpage(page=${paging.totalPage})}" th:data-num="${paging.totalPage}" class="btn btn-default">&gt;&gt;</a>
+            </span>
+        </div>
+
+    </div>
+</main>
+</body>
+</html>

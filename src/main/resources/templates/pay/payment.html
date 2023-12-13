@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>결제 완료</title>
+</head>
+<body>
+<div class="payment-container">
+    <h1>결제 완료</h1>
+
+    <p>결제가 성공적으로 완료되었습니다.</p>
+
+    <p><strong>고객 정보:</strong></p>
+    <p><strong>이름:</strong> <span th:text="${userDto.name}"></span></p>
+    <p><strong>이메일:</strong> <span th:text="${email}"></span></p>
+
+    <p><strong>결제 정보:</strong></p>
+    <p><strong>숙소 이름:</strong> <span th:text="${homeInfo.hname}"></span></p>
+    <p><strong>가격:</strong> $<span th:text="${homeInfo.price}"></span></p>
+    <p><strong>인원수:</strong> <span th:text="${rentDto.np}"></span></p>
+    <p><strong>예약 날짜:</strong> <span th:text="${rentDto.checkin}"></span> ~ <span th:text="${rentDto.checkout}"></span></p>
+
+    <p><a href="/">홈으로</a></p>
+</div>
+</body>
+</html>

@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <!-- 1. 스크립트 추가 -->
+    <script src="https://js.tosspayments.com/v1/payment-widget"></script>
+    <title></title>
+</head>
+<body>
+
+<!-- 상품 정보 영역-->
+<div class="title">상품 정보</div>
+<p>숙소 결제</p>
+<p>결제 금액: <span th:text="${homeInfo.price*daysBetween}"></span></p>
+
+<!-- 결제 방법 영역-->
+<div id="payment-method"></div>
+<div id="agreement"></div>
+<!-- 결제 버튼 -->
+<button id="payment-button">결제하기</button>
+<script>
+    let homePrice = [[${homeInfo.price}]];
+    let daysBetween = [[${daysBetween}]];
+
+
+    const clientKey = 'test_ck_24xLea5zVAlXJa4npbyK3QAMYNwW' // 테스트용 클라이언트 키
+    const customerKey = 'xNs1An_r7E2G62McnOD-O' // 내 상점에서 고객을 구분하기 위해 발급한 고객의 고유 ID
+    const amount =  homePrice*daysBetween // 결제 금액
+
+    // 2. 결제위젯 SDK 초기화 및 결제 위젯 렌더링
+    const paymentWidget = PaymentWidget(clientKey, customerKey) // 회원 결제
+    // const paymentWidget = PaymentWidget(clientKey, PaymentWidget.ANONYMOUS) // 비회원 결제
+    //paymentMethods = paymentWidget.renderPaymentMethods('#payment-method', amount)
+
+    paymentWidget.renderPaymentMethods(
+        "#payment-method",
+        { value: amount },
+        // 렌더링하고 싶은 멀티 결제 UI의 variantKey
+        // 결제 수단 및 스타일이 다른 멀티 UI를 직접 만들고 싶다면 계약이 필요해요.
+        // https://docs.tosspayments.com/guides/payment-widget/admin#멀티-결제-ui
+        { variantKey: "DEFAULT" }
+    )
+
+    /*약관 영역 렌더링*/
+    //const paymentAgreement = paymentWidget.renderAgreement('#agreement')
+
+    paymentWidget.renderAgreement(
+        '#agreement',
+        { variantKey: "AGREEMENT" } // 기본 이용약관 렌더링
+    )
+
+    /*결제창 열기*/
+    document.querySelector("#payment-button").addEventListener("click", () => {
+        //결제 수단
+        paymentWidget.requestPayment({
+            amount:amount,
+            orderId: Math.random().toString(36).substring(2, 12),         //'Math.random().toString(36).substring(2, 12);', //숙소 고유번호
+            orderName: '토스 티셔츠',
+            successUrl: 'http://localhost:8085/pay/success',
+            failUrl: 'http://localhost:8085/pay/fail',
+
+        }).catch(function (error) {
+            if (error.code === 'USER_CANCEL') {
+                // 결제 고객이 결제창을 닫았을 때 에러 처리
+            } if (error.code === 'INVALID_CARD_COMPANY') {
+                // 유효하지 않은 카드 코드에 대한 에러 처리
+            }
+        })
+    })
+    console.log(orderId);
+</script>
+</body>
+</html>

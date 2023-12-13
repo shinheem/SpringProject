@@ -1,0 +1,60 @@
+@charset "UTF-8";
+@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+KR&family=Noto+Serif+KR&display=swap'); 
+*{
+	font-family: 'Noto Serif KR', serif;	
+}
+h3 {
+	width:600px;
+/* 	margin: auto;
+	margin-top: 50px; */
+	margin: 10px auto;
+}
+table{
+    border-top: 3px solid #808080;
+    border-bottom: 3px solid #808080 ;
+    width: 600px;
+    margin: auto;
+}
+td{
+    padding: 10px;
+}
+
+td:first-child > label {
+    background-color:#d7ccc8  ;         
+    color: black;
+    border-radius: 5px;
+    text-align: center;
+    width: 80%;
+    display: inline-block;
+    padding: 10px;
+}
+#join button {
+    padding: 7px 15px;
+    margin: 15px 7px;
+    background-color: #e65100;
+    border: none;
+    color: white;
+    font-size: 1.1em;
+    border-radius: 7px;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: rgb(75,7,52);
+}
+td:nth-child(2) >label {
+    cursor: pointer;
+}
+
+tr:last-child > td {
+/*     background-color: white; */
+    text-align: center;
+}
+input[type=text],#join input[type=password],#join input[type=email], input[type=number] {
+    width: 60%;
+}
+#join select ,#join input {
+    padding: 6px;
+    border-radius: 6px;
+    border: 1px solid #808080;
+}

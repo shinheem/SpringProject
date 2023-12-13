@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.iclass.mvc.dao.ReviewMapper">
+    <select id="selectAll">
+        select *
+        from review
+        where idx = #{idx}
+    </select>
+
+    <select id="reviewlist">
+        SELECT * FROM
+        (SELECT rownum r ,f.* FROM
+        (SELECT * FROM REVIEW
+         WHERE idx = #{idx}
+         ORDER BY rnum DESC) f)
+        WHERE r BETWEEN #{start} AND #{end}
+    </select>
+
+    <select id="count" resultType="int">
+        SELECT count(*) FROM REVIEW
+        WHERE idx = #{idx }
+    </select>
+
+    <insert id="reviewInsert">
+        insert into
+        review (idx, filenames, id, comments, writer, createdat, rnum)
+        values (#{idx}, #{filenames}, #{id}, #{comments}, #{writer}, sysdate, rnum_seq.nextval)
+    </insert>
+
+    <update id="reviewUpdate">
+        update REVIEW
+        set
+            comments = #{comments}, createdat = sysdate
+        where
+            rnum = #{rnum}
+    </update>
+
+    <delete id="reviewDelete">
+        delete
+        from review
+        where
+            rnum = #{rnum}
+    </delete>
+    <sql id="search">
+        <where>
+            <if test="types !=null and types.length >0 and keyword != null and keyword.length !=0">
+                <foreach collection="types" item="type" open="(" close=")" separator=" OR ">
+                    <if test="type=='h'.toString()"> hname like '%' || #{keyword} || '%' </if>
+                    <if test="type=='d'.toString()"> address like '%' || #{keyword} || '%' </if>
+                </foreach>
+            </if>
+            <if test="startdate!=null and enddate !=null">
+                <trim prefix="and">
+                    startdate between #{startdate} and #{enddate}
+                </trim>
+            </if>
+            <if test="people!=null and people.length !=0">
+                <trim prefix="and">
+                    people=#{people}
+                </trim>
+            </if>
+        </where>
+    </sql>
+</mapper>

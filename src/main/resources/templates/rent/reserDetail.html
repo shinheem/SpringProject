@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<head>
+  <meta charset="UTF-8">
+  <title>예약 정보</title>
+</head>
+<body>
+<h3>예약 정보</h3>
+<hr>
+<div class="reser">
+  <div class="reservation">
+    <span class="label">아이디:</span>
+    <div class="email"
+         th:text="${rentDto.email}"></div>
+  </div>
+  <hr>
+  <div class="reservation">
+    <span class="label">예약날짜:</span>
+    <div class="checkin-checkout"
+         th:text="${rentDto.checkin + ' ~ ' + rentDto.checkout}"></div>
+    <!--<a href="dateUpdate" id="editDates">수정</a>-->
+  </div>
+<hr>
+
+  <div class="reservation">
+    <span class="label">인원수:</span>
+    <div class="np" th:text="${rentDto.np}"></div>
+  </div>
+</div>
+<hr>
+<a href="/">홈으로</a>
+<hr>
+<a th:href="@{/rent/pay(homeIdx=${homeInfo.idx})}">결제하러가기</a></div>
+<script type="text/javascript">
+  alert('예약 완료 되었습니다.');
+</script>
+
+</body>
+</html>

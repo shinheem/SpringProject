@@ -1,0 +1,74 @@
+body {
+    font-family: Arial, sans-serif;
+    background-color: #fefefe;
+    padding: 20px;
+    text-align: center;
+}
+
+h3 {
+    color: #333;
+}
+
+form {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+input[type="text"], input[type="number"], select, input[type="date"] {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-sizing: border-box;
+}
+
+button[type="submit"] {
+    background-color: #c7254e;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+button[type="submit"]:hover {
+    background-color: #45a049;
+}
+
+/* Optional: Style the file input */
+input[type="file"] {
+    margin-top: 10px;
+}
+
+/* Optional: Style the labels and select */
+label {
+    display: block;
+    margin-top: 10px;
+    text-align: left;
+    font-weight: bold;
+    color: #333;
+}
+
+/* Optional: Style the date input */
+input[type="date"] {
+    width: calc(100% - 20px);
+}
+
+/* Optional: Style the form container */
+.container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+}
+
+/* Optional: Style the body background */
+body {
+    background-color: #f1f1f1;
+}

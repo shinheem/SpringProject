@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.iclass.mvc.dao.RentDao">
+    <insert id="insert" parameterType="RentDto">
+        <selectKey keyProperty="rentno" resultType="int" order="BEFORE">
+            select RENTNO_SEQ.nextval
+            from dual
+        </selectKey>
+        insert into RENT (RENTNO, EMAIL, HOME_IDX, CHECKIN,CHECKOUT,NP,rentprice)
+        values
+        (#{rentno},#{email},#{homeIdx},#{checkin},#{checkout},#{np},#{rentprice})
+    </insert>
+
+    <select id="selectByrentno" resultType="RentDto" parameterType="int">
+        select * from RENT where rentno = #{rentno}
+    </select>
+
+    <update id="updatenp">
+        UPDATE RENT
+        SET
+            NP = ${np}
+        WHERE
+            RENTNO = #{RENTNO}
+    </update>
+
+    <update id="updateindate" >
+        UPDATE RENT
+        SET
+            CHECKIN = ${CHECKIN}
+        WHERE
+            RENTNO = #{RENTNO}
+    </update>
+
+    <update id="updateoutdate" >
+        UPDATE RENT
+        SET
+            CHECKOUT = ${CHECKOUT}
+        WHERE
+            RENTNO = #{RENTNO}
+    </update>
+
+    <!--김민섭 마이페이지 예약내역 표시 sql-->
+    <select id = "userent" resultType="RentDto" parameterType="String">
+        SELECT rentno, EMAIL, HOME_IDX, checkin, checkout, np
+        FROM RENT
+        WHERE EMAIL=#{email}
+    </select>
+
+    <!-- 페이지네이션(페이지 설정) -->
+    <select id="pagelist" resultType="RentDto">
+        SELECT *
+        FROM (
+                 SELECT rownum r, f.*
+                 FROM (
+                          SELECT r.RENTNO, h.FILENAMES, h.HNAME, r.RENTPRICE, r.CHECKIN, r.CHECKOUT, r.NP
+                          FROM RENT R
+                                   INNER JOIN HOME H ON R.HOME_IDX = H.IDX
+                          WHERE R.EMAIL = #{email}
+                          ORDER BY CHECKOUT DESC
+                      ) f
+             )
+        WHERE r BETWEEN #{start} AND #{end}
+    </select>
+
+    <select id="count" resultType="int">
+        SELECT count(*)
+        FROM RENT
+        where EMAIL = #{email}
+    </select>
+
+    <!-- 예약 취소 -->
+    <delete id="delete">
+        DELETE FROM
+            RENT
+        WHERE
+            rentno=#{rentno}
+    </delete>
+
+    <select id="selectDisableDates" resultType="String">
+        WITH date_range AS (
+            SELECT DISTINCT R.RENTNO, R.HOME_IDX, TRUNC(R.CHECKIN) + LEVEL - 1 AS date_in_range
+            FROM RENT R
+            WHERE HOME_IDX = #{homeIdx}
+        <![CDATA[
+            CONNECT BY TRUNC(R.CHECKIN) + LEVEL - 1 <= TRUNC(R.CHECKOUT)
+            ]]>
+        )
+        SELECT to_char(date_in_range, 'YYYY-MM-DD') AS RENT_DATE
+        FROM date_range
+        GROUP BY date_in_range
+    </select>
+
+
+
+</mapper>

@@ -1,0 +1,153 @@
+@charset "UTF-8";
+@font-face {
+	font-family: 'SUIT-Regular';
+	src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_suit@1.0/SUIT-Regular.woff2') format('woff2');
+	font-weight: normal;
+	font-style: normal;
+}
+h1 a , div.container,h3 ,th {
+	font-family: 'SUIT-Regular';
+}
+h3, p {
+	text-align: center;
+}
+
+
+#list .pagenum {
+	border: 1px solid#79747E;
+	color: #79747E;
+	padding: 3px 5px;
+	text-decoration: none;  /*  밑줄제거  */
+	cursor: pointer;
+	display: inline-block;
+	text-align:center;
+	font-size: 9pt;
+	border-radius: 2px;
+}
+#list .pagenum:hover{
+	background-color:#79747E;
+	color:white;
+	font-weight: bold;
+}
+
+#list .current {
+	background-color:gray;
+	color:white;
+}
+
+#list a.button {
+	background-color: #79747E;
+	color:white;
+	padding: 7px 25px;
+	text-decoration: none;  /*  밑줄제거  */
+	cursor: pointer;
+	display: inline-block;
+	text-align:center;
+	border-radius: 4px;
+	border:none;
+	margin : 3px;
+}
+li{
+	list-style-type: none;
+}
+
+/* 보여줄 구간의 높이와 넓이 설정 */
+#slideShow{
+	width: 250px;
+	height: 250px;
+	position: relative;
+	margin: 50px auto;
+	overflow: hidden;
+	/*리스트 형식으로 이미지를 일렬로
+    정렬할 것이기 때문에, 500px 밖으로 튀어 나간 이미지들은
+    hidden으로 숨겨줘야됨*/
+}
+
+
+.slides{
+	position: absolute;
+	left: 0;
+	top: 0;
+	width: 2500px; /* 슬라이드할 사진과 마진 총 넓이 */
+	transition: left 0.5s ease-out;
+	display: inline-block;
+	/*ease-out: 처음에는 느렸다가 점점 빨라짐*/
+}
+
+/* 첫 번째 슬라이드 가운데에 정렬하기위해
+첫번째 슬라이드만 margin-left조정 */
+.slides li:first-child{
+}
+
+/* 슬라이드들 옆으로 정렬 */
+.slides li:not(:last-child){
+	float: left;
+	margin-right: 50px;
+}
+
+.slides li{
+	float: left;
+}
+
+.controller span{
+	position:absolute;
+	background-color: transparent;
+	color: black;
+	text-align: center;
+	border-radius: 50%;
+	padding: 10px 20px;
+	top: 50%;
+	font-size: 1.3em;
+	cursor: pointer;
+}
+
+/* 이전, 다음 화살표에 마우스 커서가 올라가 있을때 */
+.controller span:hover{
+	background-color: rgba(128, 128, 128, 0.11);
+}
+
+.prev{
+	left: 10px;
+}
+
+/* 이전 화살표에 마우스 커서가 올라가 있을때
+이전 화살표가 살짝 왼쪽으로 이동하는 효과*/
+.prev:hover{
+	transform: translateX(-10px);
+}
+
+.next{
+	right: 10px;
+}
+
+/* 다음 화살표에 마우스 커서가 올라가 있을때
+이전 화살표가 살짝 오른쪽으로 이동하는 효과*/
+.next:hover{
+	transform: translateX(10px);
+}
+.title{
+	color: black;
+}
+
+.tt{
+	text-align: left;
+	margin-bottom: 20px;
+	margin: auto;
+	max-width: 500px;
+	border-radius:500px;
+}
+/* 콤보박스 스타일 */
+.tt select {
+	width: 15%; /* 콤보박스의 너비를 부모 요소와 동일하게 설정합니다 */
+	padding: 5px; /* 콤보박스 내부 여백을 조절합니다 */
+	border: 1px solid darkgray; /* 콤보박스 테두리 스타일을 지정합니다 */
+	border-radius: 5px; /* 콤보박스 모서리 둥글게 처리 */
+	background-color: #fff; /* 콤보박스의 배경색을 지정합니다 */
+	cursor: pointer; /* 커서를 손가락 모양으로 변경하여 클릭 가능한 것임을 나타냄 */
+}
+
+/* 콤보박스가 선택될 때의 스타일 */
+.tt select:focus {
+	border-color: #808080; /* 콤보박스가 선택될 때 테두리 스타일 변경 */
+	outline: none; /* 선택 표시 제거 */
+}

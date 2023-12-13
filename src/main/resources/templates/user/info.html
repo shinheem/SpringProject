@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org" >
+<head>
+    <link rel="stylesheet" href="/css/info.css">
+</head>
+<!-- 기본 레이아웃 -->
+<header th:replace="header.html"></header>  <!-- 1. 레이아웃의 상단은 header.html 의 header 조각 가져오기-->
+<div style="text-align: center">
+    <hr>
+    <h2>내 정보 조회</h2>
+    <hr>
+    <div class="info">
+        <p th:text="'회원번호: ' + ${userDto.id}"></p>
+        <br>
+        <p th:text="'이름: ' + ${userDto.name}"></p>
+        <br>
+        <p th:text="'ID: ' + ${userDto.email}"></p> <br>
+        <p th:text="'전화번호: ' + ${userDto.tel}"></p> <br>
+        <p th:text="'주소: ' + ${userDto.address}"></p> <br>
+        <p th:text="'성별: ' + ${userDto.gender}"></p> <br>
+    </div>
+    <div class="hearts" style="width: 300px; margin: 0 auto; display: inline-block">
+        <a style="margin: 40px 10px;float: left" th:href="@{/user/infoupdate}" class="update">수정하기</a>
+        <a style="margin: 40px 0 0 95px; float: left" th:href="@{/user/heartsList}" class="update">찜 목록</a>
+    </div>
+</div>
+<hr>
+<div th:replace="footer.html"></div>
+</div>
+</body>
+</html>

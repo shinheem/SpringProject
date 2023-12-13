@@ -1,0 +1,187 @@
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Login</title>
+    <link type="text/css" rel="stylesheet" href="/css/login.css" />
+    <link href="https://cdn.jsdelivr.net/npm/daisyui@3.9.3/dist/full.css" rel="stylesheet" type="text/css" />
+</head>
+
+<body>
+<div class="container">
+    <!-- Heading -->
+    <h1 class="title1">Login</h1>
+
+    <!-- Links -->
+    <ul class="links">
+        <li>
+            <a href="/user/login" id="signin">SIGN IN</a>
+        </li>
+        <li>
+            <a href="/user/signup" id="signup">SIGN UP</a>
+        </li>
+        <li>
+            <a href="/" id="reset">HOME</a>
+        </li>
+        <li>
+            <a onclick="openModal('my_modal_1')">아이디  찾기</a>
+        </li>
+        <li>
+            <a onclick="openModal('my_modal_3')">비밀번호 찾기</a>
+        </li>
+    </ul>
+    <dialog id="my_modal_1" class="modal">
+        <div class="modal-box">
+            <h3 class="font-bold text-lg">아이디 찾기</h3>
+            <p class="py-4">이름과 전화 번호를 입력해 주세요.</p>
+            <div class="modal-action">
+                <div class="form-label-group">
+                    <label for="name">이름</label>
+                    <input type="text" id="name" name="name" class="form-control"/>
+                </div>
+
+                <div class="form-label-group">
+                    <label for="tel">전화 번호</label>
+                    <input type="tel" id="tel" name="tel" class="form-control" placeholder="하이폰(-)을 넣어주세요."/>
+                </div>
+
+                <div class="form-label-group">
+                    <input id="findId" class="btn btn-lg btn-secondary btn-block text-uppercase" type="button"
+                           value="check">
+                    <button onclick="closeModal('my_modal_1')"> Cancel</button>
+                </div>
+            </div>
+        </div>
+    </dialog>
+
+    <!-- 비밀번호 -->
+    <dialog id="my_modal_3" class="modal">
+        <div class="modal-box">
+            <h3 class="font-bold text-lg">비밀번호 찾기</h3>
+            <p class="py-4">이름과 이메일를 입력해 주세요.</p>
+            <div class="modal-action">
+                <div class="form-label-group">
+                    <label for="name">이름</label>
+                    <input type="text" id="userName" name="userName" class="form-control"/>
+                </div>
+
+                <div class="form-label-group">
+                    <label for="tel">이메일</label>
+                    <input type="email" id="userEmail" name="userEmail" class="form-control"/>
+                </div>
+
+                <hr>
+                <div class="form-label-group">
+                    <input id="checkEmail" class="btn btn-lg btn-secondary btn-block text-uppercase" type="submit"
+                           value="check">
+                <button onclick="closeModal('my_modal_3')"> Cancel</button>
+                </div>
+                <div class="text-center small mt-2" id="checkMsg" style="color: red"></div>
+            </div>
+        </div>
+    </dialog>
+
+    <!-- 비번찾기 모달 -->
+
+    <script type="text/javascript">
+        function openModal(id) {
+            var modal = document.getElementById(id);
+            modal.showModal();
+        }
+
+        function closeModal(id) {
+            var modal = document.getElementById(id);
+            modal.close();
+        }
+
+        /* 비밀번호 */
+        document.getElementById("checkEmail").addEventListener("click", function () {
+            var userEmail = document.getElementById("userEmail").value;
+            var userName = document.getElementById("userName").value;
+
+            // Ajax 요청
+            var xhr = new XMLHttpRequest();
+            xhr.open("POST", "/user/findPassword", true);
+            xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState === 4) {
+                    if (xhr.status === 200) {
+                        var response = JSON.parse(xhr.responseText);
+                        if (response.check === "true") {
+                            // 성공적으로 이메일과 이름이 일치할 때의 처리
+                            alert(response.msg);
+                            location.reload();
+                        } else {
+                            // 이메일과 이름이 일치하지 않을 때의 처리
+                            alert(response.msg);
+                        }
+                    }
+                }
+            };
+
+            // 데이터 전송
+            var data = "userEmail=" + userEmail + "&userName=" + userName;
+            xhr.send(data);
+        });
+
+        document.getElementById("findId").addEventListener("click", function () {
+            var userName = document.getElementById("name").value;
+            var userTel = document.getElementById("tel").value;
+
+            // Ajax 요청
+            var xhr = new XMLHttpRequest();
+            xhr.open("POST", "/user/findId", true);
+            xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState === 4) {
+                    if (xhr.status === 200) {
+                        var response = JSON.parse(xhr.responseText);
+                        if (response.check === "true") {
+                            alert(response.msg);
+                            location.reload();
+                        } else {
+                            alert(response.msg);
+                        }
+                    }
+                }
+            };
+
+            // 데이터 전송
+            var data = "name=" + userName + "&tel=" + userTel;
+            xhr.send(data);
+        });
+
+    </script>
+
+    <!-- Form -->
+    <form th:action="@{/user/login}" method="post" th:if="${param.logout == null}">
+
+        <!-- email input -->
+        <div class="first-input input__block first-input__block">
+            <input type="text" placeholder="Email" class="input" id="email" name="email"/>
+        </div>
+
+        <!-- password input -->
+        <div class="input__block">
+            <input type="password" placeholder="Password" class="input" id="password" name="password"/>
+        </div>
+
+        <!-- sign in button -->
+        <button class="signin1__btn">
+            Sign in
+        </button>
+
+        <!-- separator -->
+        <div class="separator">
+            <p>OR</p>
+        </div>
+        <div>
+            <!-- kakao button -->
+            <button class="google__btn" >
+                <a th:href="|@{${kakaoUrl}}|">
+                    카카오로 간편 로그인
+                </a></button>
+        </div>
+    </form>
+</div>
+</body>
+</html>

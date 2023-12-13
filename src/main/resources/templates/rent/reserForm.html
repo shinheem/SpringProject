@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<head>
+    <meta charset="UTF-8">
+    <title>reserForm.html</title>
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/smoothness/jquery-ui.css">
+    <script src="//code.jquery.com/jquery-1.12.4.js"></script>
+    <script src="//code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    <link rel="stylesheet" href="/css/reserForm.css">
+
+    <script>
+        function showDatePicker(inputId) {
+            const inputElement = document.getElementById(inputId);
+            if (inputElement) {
+                inputElement.style.display = 'block';
+                inputElement.focus();
+            }
+        }
+    </script>
+
+</head>
+<body>
+<div class="body-box">
+    <div class="head-htag">
+        <h2>예약</h2>
+    </div>
+    <div class="head-htag">
+        <h4 th:text="${homeInfo.hname}"></h4>
+    </div>
+    <div class="calender-body-check"></div>
+    <form style="height: 31em" action="/rent/reserForm" method="post">
+        <input type="hidden" name="rentprice">
+        <input type="hidden" th:value="${rentno}">
+        <input type="hidden" name="homeIdx" th:value="${homeInfo.idx}">
+        <input type="hidden" id="email" name="email" th:value="${#session.getAttribute('email')}"/>
+        <div class="selectedDates">
+
+            <input type="date" id="checkin" name="checkin" style="display: none;"required>
+
+            <input type="date" id="checkout" name="checkout" style="display: none;"required>
+        </div>
+        <div class="date-text">
+            <span id="selectedDateText">체크인:</span>
+            <span id="selectedDateText1">체크아웃: </span>
+        </div>
+        <div class="headcount">
+            <label for="np">인원수:</label>
+            <select id="np" name="np">
+                <th:block th:each="num : ${#numbers.sequence(1, homeInfo.people)}">
+                    <option th:value="${num}" th:text="${num}" selected></option>
+                </th:block>
+            </select>
+        </div>
+        <div class="divide-button-atag">
+            <button class="red-button" type="button" onclick="submits()">예약하기</button>
+            <a href="/">홈으로</a>
+        </div>
+    </form>
+</div>
+
+
+</form>
+
+<script>
+    function submits() {
+        const f = document.forms[0];
+        const price = [[${homeInfo.price}]]
+        const startdate = new Date(f.checkin.value);
+        const enddate = new Date(f.checkout.value);
+
+        // 날짜 간의 차이를 계산
+        const timeDifference = enddate - startdate;
+        const daysDifference = timeDifference / (1000 * 60 * 60 * 24);
+
+        // 가격 계산
+        const rentprice = price * daysDifference;
+
+        // 결과를 hidden input 필드에 설정
+        f.rentprice.value = rentprice;
+
+        // 폼 제출
+        f.submit();
+    }
+
+    let homeIdx = [[${homeInfo.idx}]];
+
+    // 여기에 가져온 배열을 넣기
+    let disabledDays = null;
+    getDisableData(homeIdx);
+
+    function getDisableData(homeIdx){
+        console.log(homeIdx);
+        $.ajax({
+            url: `/rentRest/disabledate/${homeIdx}`,
+            type: 'get',
+            dataType : 'json',
+            success: function (result){
+                disabledDays = result;
+                console.log(disabledDays);
+                datePicker(result);
+
+            },
+            error: function (a, b, c) {
+                console.error(c);
+            }
+        });
+
+    }
+    let selectedCheckin = null;
+    let selectedCheckout = null;
+    function datePicker(disabledDays) {
+        $.datepicker.regional['ko'] = {
+            closeText: '닫기',
+            prevText: '이전달',
+            nextText: '다음달',
+            currentText: '오늘',
+            monthNames: ['1월', '2월', '3월', '4월', '5월', '6월', '7월', '8월', '9월', '10월', '11월', '12월'],
+            monthNamesShort: ['1월', '2월', '3월', '4월', '5월', '6월', '7월', '8월', '9월', '10월', '11월', '12월'],
+            dayNames: ['일', '월', '화', '수', '목', '금', '토'],
+            dayNamesShort: ['일', '월', '화', '수', '목', '금', '토'],
+            dayNamesMin: ['일', '월', '화', '수', '목', '금', '토'],
+            weekHeader: '주',
+            dateFormat: 'yy-mm-dd',
+            firstDay: 0,
+            isRTL: false,
+            showMonthAfterYear: true,
+            yearSuffix: '',
+            beforeShowDay: disableAllTheseDays,
+
+            onSelect: function(dateText, instance) {
+                if (instance.id === 'checkin') {
+                    selectedCheckin = dateText;
+                    $('#selectedDateText').text(selectedCheckin);
+                } else if (instance.id === 'checkout') {
+                    selectedCheckout = dateText;
+                    $('#selectedDateText1').text(selectedCheckout);
+                }
+            }
+
+
+
+        };
+        $.datepicker.setDefaults($.datepicker.regional['ko']);
+
+        $("#checkin, #checkout").datepicker({
+            dateFormat: 'yy-mm-dd',
+            minDate: 0,
+            maxDate: '+30d',
+            showOn: 'button',
+            buttonImage: 'https://img.freepik.com/free-vector/schedule-calendar-flat-style_78370-1550.jpg?w=740&t=st=1698832469~exp=1698833069~hmac=ee3588a2ca28d6fca433eec5045d946cb3971ffe1f2f5dfeed83548b6e0efdb2',
+            buttonImageOnly: true
+        });
+    };
+    // 특정일 선택막기
+    function disableAllTheseDays(date) {
+        let m = date.getMonth(), d = date.getDate(), y = date.getFullYear();
+        for (i = 0; i < disabledDays.length; i++) {
+            if ($.inArray(y + '-' + (m + 1) + '-' + (d < 10 ? '0' + d : d), disabledDays) !== -1) {
+                return [false];
+            }
+        }
+        return [true];
+    }
+</script>
+</body>
+</html>

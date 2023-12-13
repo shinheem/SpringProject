@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html lang="en" class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html lang="en" class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html lang="en" class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html lang="en" class="no-js" xmlns:th="http://www.thymeleaf.org">
+<!--<![endif]-->
+<head>
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+	<!-- meta charec set -->
+	<meta charset="utf-8">
+	<!-- Always force latest IE rendering engine or request Chrome Frame -->
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+	<!-- Page Title -->
+	<title>아 몰랑 자고가</title>
+	<!-- Meta Description -->
+	<meta name="description" content="Blue One Page Creative HTML5 Template">
+	<meta name="keywords" content="one page, single page, onepage, responsive, parallax, creative, business, html5, css3, css3 animation">
+	<meta name="author" content="Muhammad Morshed">
+	<!-- Mobile Specific Meta -->
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+
+	<!-- Google Font -->
+
+	<link href='http://fonts.googleapis.com/css?family=Open+Sans:400,300,600,700,800' rel='stylesheet' type='text/css'>
+
+	<!-- CSS
+     ================================================== -->
+	<!-- index css-->
+	<link rel="stylesheet" href="/css/main.css">
+	<!-- Fontawesome Icon font -->
+	<link rel="stylesheet" href="/css/font-awesome.min.css">
+	<!-- Twitter Bootstrap css -->
+	<link rel="stylesheet" href="/css/bootstrap.min.css">
+	<!-- jquery.fancybox  -->
+	<link rel="stylesheet" href="/css/jquery.fancybox.css">
+	<!-- animate -->
+	<link rel="stylesheet" href="/css/animate.css">
+	<!-- Main Stylesheet -->
+	<link rel="stylesheet" href="/css/main.css">
+	<!-- media-queries -->
+	<link rel="stylesheet" href="/css/media-queries.css">
+	<!-- Modernizer Script for old Browsers -->
+	<script src="/js/modernizr-2.6.2.min.js"></script>
+</head>
+<body>
+<div class="carousel-inner" role="listbox">
+	<!-- single slide-->
+	<div class="item active" style="background-image: url(/img/parallax/city.jpg); height: 1200px;" >
+		<div class="carousel-caption">
+			<h2 data-wow-duration="700ms" data-wow-delay="500ms" class="wow bounceInDown animated"><span>Ho:me</span></h2>
+			<h3 data-wow-duration="1000ms" class="wow slideInLeft animated"><span class="color"></span></h3>
+			<p data-wow-duration="1000ms" class="wow slideInRight animated"></p>
+			<form action="/home/list" method="GET" style="margin-top: 50px;">
+				<div class="mx-auto mt-5 search-bar input-group mb-3">
+					<div class="form-group">
+						<input type="hidden" value="hd" name="type">
+						<input type="text" class="form-control rounded-pill" name="keyword" placeholder="검색어를 입력하세요">
+					</div>
+					<div class="form-group">
+						<input type="date" name="startdate" id="startdate" class="form-control rounded-pill"
+							   placeholder="시작 날짜">
+					</div>
+					<div class="form-group">
+						<input type="date" name="enddate" id="enddate" class="form-control rounded-pill"
+							   placeholder="끝나는 날짜">
+					</div>
+					<div class="form-group">
+						<input type="number" name="people" placeholder="인원수" class="form-control rounded-pill" aria-hidden="true">
+					</div>
+					<div>
+						<button class="btn btn-primary rounded-pill" style="margin-top: 5px" type="submit">
+							<i class="fa fa-search" aria-hidden="true"></i>
+						</button>
+					</div>
+				</div>
+			</form>
+		</div>
+	</div>
+</div>
+<header id="navigation" class="navbar-fixed-top navbar">
+	<div class="container">
+		<div class="navbar-header">
+			<!-- responsive nav button -->
+			<button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+				<span class="sr-only">Toggle navigation</span>
+				<i class="fa fa-bars fa-2x"></i>
+			</button>
+			<!-- /responsive nav button -->
+
+			<!-- logo -->
+			<a class="navbar-brand" href="/">
+				<i class="fa-solid fa-location-dot fa-xs">
+					<h1 id="logo" class="ho:me" >Ho:me</h1>
+				</i>
+			</a>
+		</div>
+
+		<!-- main nav 네비-->
+		<nav class="collapse navbar-collapse navbar-right" role="navigation">
+			<ul id="nav" class="nav navbar-nav">
+				<li><span th:unless="${session.email}!=null"></span>
+					<span th:if="${session.email}!=null">[[${session.name}]] 님</span></li>
+				<li class="current"><a class="navi" th:href="@{/}">Home</a></li>
+				<li><a class="navi" th:if="${session.email!=null}" href="/user/info">내 정보</a></li>
+				<li><a class="navi"href="/home/list">숙소</a></li>
+				<li th:if="${session.email != null}">
+					<a class="navi" href="/rent/reserpage">예약 내역</a></li>
+				<li th:unless="${session.email != null}">
+					<a class="navi" href="#" onclick="alert('로그인 후 사용 가능합니다.'); window.location.href='/user/login';">예약 내역</a></li>
+				<li th:if="${session.email != null}">
+					<a class="navi" href="/home/hregister">숙소 등록</a></li>
+				<li th:unless="${session.email != null}">
+					<a class="navi" href="#" onclick="alert('로그인 후 사용 가능합니다.'); window.location.href='/user/login';">숙소 등록</a></li>
+				<li><a class="navi" th:if="${session.email}==null" href="/user/login">로그인</a></li>
+				<li><a class="navi" th:if="${session.email!=null}" href="/user/logout">로그아웃</a></li>
+			</ul>
+		</nav>
+		<!-- /main nav -->
+
+	</div>
+</header>
+<!-- 여기 아래 기능 넣기-->
+<script src="/https://kit.fontawesome.com/959f05f7d6.js" crossorigin="anonymous"></script>
+<footer th:replace="footer.html"></footer>
+</body>
+</html>

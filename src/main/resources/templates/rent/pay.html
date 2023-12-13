@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <link href="https://fonts.googleapis.com/css?family=Montserrat:500,800" rel="stylesheet">
+    <link rel="stylesheet" href="/css/pay.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <title>결제 페이지</title>
+</head>
+<body>
+<main class="container" id="list">
+    <div class="container" style="margin:auto;width:900px;">
+        <ul id="main">
+            <h1>예약 확인</h1>
+            <div class="background-gray-form">
+                <div class="list-box">
+                    <p>예약자 이름: <span th:text="${userDto.name}"></span></p>
+                </div>
+                <div class="list-box">
+                    <p>이메일: <span th:text="${userDto.email}"></span></p>
+                </div>
+                <div class="list-box">
+                    <p>숙소 이름: <span th:text="${homeInfo.hname}"></span></p>
+                </div>
+                <div class="list-box">
+                    <p>객실 타입: <span th:text="${homeInfo.hometype}"></span></p>
+                </div>
+                <div class="list-box">
+                    <p>가격: <span th:text="${daysBetween*homeInfo.price}"></span></p>
+                </div>
+                <div class="list-box">
+                    <p th:if="${rentDto != null}">인원수: <span th:text="${rentDto.np}"></span></p>
+                </div>
+                <div class="list-box">
+                    <p th:if="${rentDto != null}">예약날짜: <span th:text="${rentDto.checkin + ' ~ ' + rentDto.checkout}"></span></p>
+                </div>
+
+                <div class="red-button-container">
+                    <a th:href="@{/pay/viewpage(homeIdx=${homeInfo.idx}, rentno=${rentDto.rentno})}" class="red-button">결제하기</a>
+                </div>
+            </div>
+        </ul>
+    </div>
+    </ul>
+    </div>
+</main>
+</body>
+</html>
